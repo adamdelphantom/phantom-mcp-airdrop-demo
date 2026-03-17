@@ -1,76 +1,86 @@
-# Phantom MCP Airdrop Demo
+# Phantom MCP Airdrop Checker
 
-A terminal demo showcasing the [Phantom MCP server](https://www.npmjs.com/package/@phantom/mcp-server) with Claude Code. An AI agent connects to your Phantom wallet, checks token balances, and analyzes airdrop eligibility — all from the command line.
+Interactive terminal app that connects to your [Phantom](https://phantom.app) wallet via the [Phantom MCP server](https://www.npmjs.com/package/@phantom/mcp-server) and checks your eligibility for known Solana airdrops.
+
+Built with [Ink](https://github.com/vadimdemedes/ink) (React for CLI) and the [MCP SDK](https://www.npmjs.com/package/@modelcontextprotocol/sdk).
 
 ## What it does
 
 1. Connects to your Phantom wallet via MCP
-2. Retrieves wallet addresses across Solana, Ethereum, and Bitcoin
-3. Checks token balances with USD values
-4. Analyzes eligibility for known Solana airdrops (JUP, JTO, W, TNSR, CLOUD, etc.)
-5. Outputs a summary with Solscan links
+2. Shows wallet addresses with Solscan links
+3. Fetches token balances with USD values
+4. Lets you select which airdrops to check
+5. Analyzes holdings against known airdrop criteria (JUP, JTO, W, TNSR, CLOUD, DRIFT, GRASS, PRCL)
+6. Outputs a summary report with eligibility status
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18+
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
-- [VHS](https://github.com/charmbracelet/vhs) (for recording only): `brew install vhs`
 - A Phantom App ID from [phantom.com/portal](https://phantom.com/portal)
+- [VHS](https://github.com/charmbracelet/vhs) + [ffmpeg](https://ffmpeg.org/) (for recording only)
 
 ## Setup
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/gutterbacon/phantom-mcp-airdrop-demo.git
-   cd phantom-mcp-airdrop-demo
-   ```
+```bash
+git clone https://github.com/adamdelphantom/phantom-mcp-airdrop-demo.git
+cd phantom-mcp-airdrop-demo
+npm install
+```
 
-2. Set your Phantom App ID:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your PHANTOM_APP_ID
-   ```
+Create a `.env` file:
+```bash
+cp .env.example .env
+# Edit .env with your PHANTOM_APP_ID
+```
 
-3. Authenticate with Phantom (first time only):
-   ```bash
-   npx @phantom/mcp-server
-   # Follow the browser prompt to sign in with Google, Apple, or Phantom
-   ```
+Authenticate with Phantom (first time only):
+```bash
+npx @phantom/mcp-server
+# Follow the browser prompt to sign in
+```
 
-4. Run Claude Code in the project directory:
-   ```bash
-   claude
-   ```
+## Usage
 
-5. Ask Claude to check your airdrop eligibility:
-   ```
-   Check my Phantom wallet for airdrop eligibility — connect my wallet, show my addresses, check my token balances, and tell me if I qualify for any known Solana airdrops.
-   ```
+```bash
+npm start
+```
+
+Navigate with arrow keys, Space to toggle, Enter to continue, Q to exit.
 
 ## Recording a demo
 
 ```bash
+# Record with background music
 npm run record
+
+# Record without music (gif + mp4 only)
+npm run record:gif
 ```
 
-This uses VHS to record the Claude Code session as `demo.gif` and `demo.mp4`.
+## Project structure
 
-## How it works
-
-- **`.mcp.json`** — Configures the Phantom MCP server for Claude Code
-- **`CLAUDE.md`** — Guides Claude through the demo flow (connect → balances → airdrop analysis)
-- **`.claude/settings.local.json`** — Pre-approves read-only MCP tools so the demo runs without permission prompts
-- **`demo.tape`** — VHS script for recording the terminal session
+```
+src/
+  index.tsx          Entry point — creates MCP client, renders app
+  app.tsx            Root component — state machine, screen routing
+  mcp-client.ts      MCP client wrapper — typed tool calls
+  types.ts           Shared TypeScript types
+  airdrop-data.ts    Airdrop definitions + eligibility logic
+  theme.ts           Catppuccin Mocha color palette
+  screens/           One component per step (Welcome, Connect, etc.)
+  components/        Reusable UI (Banner, tables, multi-select, etc.)
+```
 
 ## Phantom MCP Tools Used
 
 | Tool | Description |
 |------|-------------|
-| `get_wallet_addresses` | Connect wallet and get addresses across Solana, Ethereum, Bitcoin |
-| `get_token_balances` | Check all token balances with USD prices via Phantom portfolio API |
+| `get_wallet_addresses` | Connect wallet, get addresses across Solana, Ethereum, Bitcoin |
+| `get_token_balances` | Fetch all token balances with USD prices |
 
 ## Links
 
 - [Phantom MCP Server](https://www.npmjs.com/package/@phantom/mcp-server)
 - [Phantom Portal](https://phantom.com/portal)
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- [Ink](https://github.com/vadimdemedes/ink)
+- [MCP SDK](https://www.npmjs.com/package/@modelcontextprotocol/sdk)

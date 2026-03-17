@@ -1,9 +1,8 @@
 # Phantom MCP Airdrop Checker Demo
 # Prerequisites:
-#   1. npm install -g @anthropic-ai/claude-code (Claude CLI)
-#   2. brew install vhs (VHS terminal recorder)
-#   3. Authenticated Phantom session (~/.phantom-mcp/session.json)
-#   4. PHANTOM_APP_ID set in environment or .env
+#   1. npm install (dependencies)
+#   2. Authenticated Phantom session (~/.phantom-mcp/session.json)
+#   3. PHANTOM_APP_ID set in .env
 #
 # Record with: npm run record
 
@@ -23,30 +22,50 @@ Set CursorBlink false
 Ctrl+L
 Sleep 500ms
 
-# Launch Claude Code in the project directory
-Type "claude"
+# Launch the TUI app
+Type "npm start"
 Sleep 300ms
 Enter
 
-# Wait for Claude Code to initialize and connect MCP servers
+# Welcome screen — let banner render
+Sleep 5s
+
+# Press Enter to connect wallet
+Enter
+
+# Wait for MCP connection + wallet addresses
 Sleep 8s
 
-# Type the demo prompt
-Type "Check my Phantom wallet for airdrop eligibility — connect my wallet, show my addresses, check my token balances, and tell me if I qualify for any known Solana airdrops."
-Sleep 500ms
+# Press Enter to check balances
 Enter
 
-# Wait for Claude to:
-# - Connect wallet via get_wallet_addresses (~5s)
-# - Check balances via get_token_balances (~8s)
-# - Analyze and generate response (~15s)
-Sleep 45s
+# Wait for balance fetch
+Sleep 8s
 
-# Let the user read the final output
-Sleep 10s
-
-# Exit Claude Code
-Type "/exit"
-Sleep 300ms
+# Press Enter to select airdrops
 Enter
+Sleep 2s
+
+# Deselect a couple for visual interest
+Down
+Down
+Space
+Down
+Space
+Sleep 1s
+
+# Confirm selection
+Enter
+
+# Wait for analysis spinner + results
+Sleep 4s
+
+# Press Enter for summary
+Enter
+
+# Read the summary
+Sleep 8s
+
+# Exit
+Type "q"
 Sleep 2s
