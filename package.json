@@ -1,0 +1,8 @@
+{
+  "name": "phantom-mcp-airdrop-demo",
+  "version": "1.0.0",
+  "description": "Phantom MCP server demo — airdrop eligibility checker with Claude Code",
+  "scripts": {
+    "record": "vhs demo.tape"
+  }
+}

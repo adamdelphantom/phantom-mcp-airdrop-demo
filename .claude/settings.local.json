@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__phantom-mcp__get_wallet_addresses",
+      "mcp__phantom-mcp__get_token_balances",
+      "mcp__phantom-mcp__get_connection_status",
+      "mcp__phantom-mcp__phantom_login",
+      "WebSearch",
+      "WebFetch"
+    ]
+  }
+}
