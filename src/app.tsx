@@ -16,10 +16,11 @@ import { AnalysisScreen } from "./screens/AnalysisScreen.js";
 import { SummaryScreen } from "./screens/SummaryScreen.js";
 
 interface AppProps {
-  client: Client;
+  client: Client | null;
+  demoMode: boolean;
 }
 
-export function App({ client }: AppProps) {
+export function App({ client, demoMode }: AppProps) {
   const [screen, setScreen] = useState<AppScreen>("welcome");
   const [addresses, setAddresses] = useState<WalletAddress[]>([]);
   const [balances, setBalances] = useState<TokenBalance[]>([]);
@@ -34,6 +35,7 @@ export function App({ client }: AppProps) {
       {screen === "connect" && (
         <ConnectScreen
           client={client}
+          demoMode={demoMode}
           onNext={(addrs) => {
             setAddresses(addrs);
             setScreen("balances");
@@ -44,6 +46,7 @@ export function App({ client }: AppProps) {
       {screen === "balances" && (
         <BalancesScreen
           client={client}
+          demoMode={demoMode}
           onNext={(bals) => {
             setBalances(bals);
             setScreen("select");
@@ -54,7 +57,6 @@ export function App({ client }: AppProps) {
       {screen === "select" && (
         <SelectScreen
           onNext={(selected) => {
-            // Run analysis immediately with selected airdrops
             const checkResults: AirdropCheckResult[] = selected.map((ad) => ({
               airdrop: ad,
               result: ad.criteria(balances),

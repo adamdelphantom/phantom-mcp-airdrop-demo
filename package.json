@@ -5,8 +5,9 @@
   "description": "Interactive TUI airdrop eligibility checker using Phantom MCP server",
   "scripts": {
     "start": "tsx src/index.tsx",
+    "demo": "tsx src/index.tsx --demo",
     "record": "vhs demo.tape && ffmpeg -y -i demo.mp4 -i assets/track.mp3 -c:v copy -c:a aac -map 0:v -map 1:a -shortest demo-with-music.mp4",
-    "record:gif": "vhs demo.tape"
+    "record:silent": "vhs demo.tape"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.0",

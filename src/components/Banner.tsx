@@ -22,7 +22,7 @@ export function Banner() {
         paddingX={2}
       >
         {TITLE.map((line, i) => (
-          <Text key={i} color={colors.mauve} bold>
+          <Text key={`title-${i}`} color={colors.mauve} bold>
             {line}
           </Text>
         ))}

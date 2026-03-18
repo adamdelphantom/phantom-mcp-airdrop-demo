@@ -3,6 +3,7 @@ import { Box, Text, useInput } from "ink";
 import Spinner from "ink-spinner";
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { getWalletAddresses } from "../mcp-client.js";
+import { MOCK_ADDRESSES } from "../mock-data.js";
 import type { WalletAddress } from "../types.js";
 import { colors } from "../theme.js";
 import { StepBar } from "../components/StepBar.js";
@@ -10,16 +11,32 @@ import { WalletCard } from "../components/WalletCard.js";
 import { Footer } from "../components/Footer.js";
 
 interface ConnectScreenProps {
-  client: Client;
+  client: Client | null;
+  demoMode: boolean;
   onNext: (addresses: WalletAddress[]) => void;
 }
 
-export function ConnectScreen({ client, onNext }: ConnectScreenProps) {
+export function ConnectScreen({ client, demoMode, onNext }: ConnectScreenProps) {
   const [loading, setLoading] = useState(true);
   const [addresses, setAddresses] = useState<WalletAddress[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (demoMode) {
+      // Simulate connection delay
+      const timer = setTimeout(() => {
+        setAddresses(MOCK_ADDRESSES);
+        setLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+
+    if (!client) {
+      setError("No MCP client available");
+      setLoading(false);
+      return;
+    }
+
     getWalletAddresses(client)
       .then((addrs) => {
         setAddresses(addrs);

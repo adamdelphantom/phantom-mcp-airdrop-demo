@@ -34,29 +34,23 @@ export async function getWalletAddresses(
   const text = content.find((c) => c.type === "text")?.text || "{}";
   const data = JSON.parse(text);
 
-  // The response structure may vary — normalize to WalletAddress[]
+  // Phantom MCP returns { walletId, organizationId, addresses: [{ addressType, address }] }
+  if (data.addresses && Array.isArray(data.addresses)) {
+    return data.addresses.map((item: Record<string, string>) => ({
+      chain: item.addressType || item.chain || "unknown",
+      address: item.address || "",
+    }));
+  }
+
+  // Fallback: flat array of address objects
   if (Array.isArray(data)) {
     return data.map((item: Record<string, string>) => ({
-      chain: item.chain || item.network || "unknown",
+      chain: item.chain || item.network || item.addressType || "unknown",
       address: item.address || item.publicKey || "",
     }));
   }
 
-  // If it's an object with chain keys
-  const addresses: WalletAddress[] = [];
-  for (const [chain, address] of Object.entries(data)) {
-    if (typeof address === "string" && address) {
-      addresses.push({ chain, address });
-    } else if (Array.isArray(address)) {
-      for (const addr of address) {
-        addresses.push({
-          chain,
-          address: typeof addr === "string" ? addr : addr.address || "",
-        });
-      }
-    }
-  }
-  return addresses;
+  return [];
 }
 
 export async function getTokenBalances(

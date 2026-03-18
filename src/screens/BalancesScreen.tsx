@@ -3,6 +3,7 @@ import { Box, Text, useInput } from "ink";
 import Spinner from "ink-spinner";
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { getTokenBalances } from "../mcp-client.js";
+import { MOCK_BALANCES } from "../mock-data.js";
 import type { TokenBalance } from "../types.js";
 import { colors } from "../theme.js";
 import { StepBar } from "../components/StepBar.js";
@@ -10,16 +11,31 @@ import { BalanceTable } from "../components/BalanceTable.js";
 import { Footer } from "../components/Footer.js";
 
 interface BalancesScreenProps {
-  client: Client;
+  client: Client | null;
+  demoMode: boolean;
   onNext: (balances: TokenBalance[]) => void;
 }
 
-export function BalancesScreen({ client, onNext }: BalancesScreenProps) {
+export function BalancesScreen({ client, demoMode, onNext }: BalancesScreenProps) {
   const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState<TokenBalance[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (demoMode) {
+      const timer = setTimeout(() => {
+        setBalances(MOCK_BALANCES);
+        setLoading(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+
+    if (!client) {
+      setError("No MCP client available");
+      setLoading(false);
+      return;
+    }
+
     getTokenBalances(client)
       .then((bals) => {
         setBalances(bals);
